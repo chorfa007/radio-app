@@ -1,0 +1,20 @@
+# Build output
+build/
+
+# macOS
+.DS_Store
+*.DS_Store
+__MACOSX/
+
+# Qt generated
+*.pro.user
+*.qmlc
+*.jsc
+
+# SQLite database (auto-created at runtime)
+*.db
+
+# Temp / logs
+/tmp/
+*.log
+nohup.out

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Radio App
+Comment=Stream radio from Tunisia, Belgium, UK & France
+Exec=/path/to/radio-app/docker-run.sh
+Icon=audio-x-generic
+Terminal=false
+Categories=AudioVideo;Audio;
