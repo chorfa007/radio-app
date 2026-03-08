@@ -56,15 +56,16 @@ void Database::initSchema() {
             FOREIGN KEY (country_id) REFERENCES countries(id)
         );
     )");
+    exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_radios_name ON radios(name);");
 }
 
 bool Database::isSeeded() const {
     sqlite3_stmt* stmt = nullptr;
-    sqlite3_prepare_v2(m_db, "SELECT COUNT(*) FROM countries;", -1, &stmt, nullptr);
+    sqlite3_prepare_v2(m_db, "PRAGMA user_version;", -1, &stmt, nullptr);
     sqlite3_step(stmt);
-    int count = sqlite3_column_int(stmt, 0);
+    int version = sqlite3_column_int(stmt, 0);
     sqlite3_finalize(stmt);
-    return count > 0;
+    return version >= 2;
 }
 
 // ─── seed ───────────────────────────────────────────────────────────────────
@@ -115,6 +116,61 @@ void Database::seedData() {
         { "Sfax FM",              "http://rtstream.tanitweb.com/sfax",                      "Regional",       "Regional radio from Sfax",              gf+"tanitweb.com.ico",        tn },
         { "Radio Tunisie Culturelle","http://rtstream.tanitweb.com/culturelle",             "Culture",        "Tunisian national cultural radio",      gf+"tanitweb.com.ico",        tn },
         { "Radio Kef",            "http://rtstream.tanitweb.com/kef",                       "Regional",       "Regional radio from Le Kef",            gf+"tanitweb.com.ico",        tn },
+
+        // ── Tunisia (extended from tunisie-radio.com) ─────────────────────────
+        { "Shems FM",             "https://radio.shemsfm.net/shems",                        "Pop / Arabic",   "Pop and Arabic music",                  gf+"shemsfm.net.ico",         tn },
+        { "IFM 100.6",            "https://live.ifm.tn/radio/8000/ifmlive?1585267848",       "Pop / Talk",     "IFM 100.6 — music & talk",              gf+"ifm.tn.ico",              tn },
+        { "Zitouna FM",           "https://radio.radiotunisienne.tn/radiozaitouna",          "Religious",      "Islamic & Quranic broadcasting",        gf+"radiotunisienne.tn.ico",  tn },
+        { "Radio Tunis Nationale","https://radio.radiotunisienne.tn/nationale",              "News / Culture", "Tunisia's national public radio",       gf+"radiotunisienne.tn.ico",  tn },
+        { "KnOOz FM",             "http://streaming.knoozfm.net:8000/knoozfm",              "Pop / Hits",     "Hot hits & entertainment",              gf+"knoozfm.net.ico",         tn },
+        { "Sabra FM",             "https://manager5.streamradio.fr:1905/stream",            "News / Talk",    "News and current affairs",              gf+"sabrafm.tn.ico",          tn },
+        { "Cap FM",               "http://stream8.tanitweb.com/capfm",                      "Variety",        "Variety hits and entertainment",        gf+"tanitweb.com.ico",        tn },
+        { "Radio Jeunes Tunisie", "https://radio.radiotunisienne.tn/jeunes",                "Youth / Pop",    "Tunisia's youth radio",                 gf+"radiotunisienne.tn.ico",  tn },
+        { "Radio Monastir",       "https://radio.radiotunisienne.tn/monastir",              "Regional",       "Regional radio from Monastir",          gf+"radiotunisienne.tn.ico",  tn },
+        { "RTCI",                 "https://radio.radiotunisienne.tn/rtci",                  "International",  "Radio Tunisienne Internationale",       gf+"radiotunisienne.tn.ico",  tn },
+        { "Radio Panorama",       "https://stream.tun-radio.com/radio/8000/panorama_tunis", "Variety",        "Panorama radio from Tunis",             gf+"tanitweb.com.ico",        tn },
+        { "Radio Quran",          "http://5.135.194.225:8000/live",                         "Religious",      "24/7 Quran recitation",                 gf+"radiocoranfm.com.ico",    tn },
+        { "Radio Gafsa",          "https://radio.radiotunisienne.tn/gafsa",                 "Regional",       "Regional radio from Gafsa",             gf+"radiotunisienne.tn.ico",  tn },
+        { "Radio Tataouine",      "https://radio.radiotunisienne.tn/tataouine",             "Regional",       "Regional radio from Tataouine",         gf+"radiotunisienne.tn.ico",  tn },
+        { "Radio Misk FM",        "https://live.misk.art/stream",                           "Spiritual",      "Spiritual & Islamic music",             gf+"misk.art.ico",            tn },
+        { "Radio Med Tunisie",    "http://stream6.tanitweb.com/radiomed",                   "Mediterranean",  "Mediterranean music & culture",         gf+"tanitweb.com.ico",        tn },
+        { "Oasis FM Gabes",       "https://stream1.rcast.net/69919",                        "Regional",       "Regional radio from Gabes",             gf+"rcast.net.ico",           tn },
+        { "Ulysse FM",            "http://51.178.31.38:8000/stream",                        "Regional",       "Radio from Djerba island",              gf+"tanitweb.com.ico",        tn },
+        { "MFM Tunisie",          "https://mfmtunisie.toutech.net/mfmlive",                 "Pop / Hits",     "Top hits & music",                      gf+"toutech.net.ico",         tn },
+        { "Radio Kelma FM",       "http://mdigital.agency:8000/radiokelma",                "Talk / News",    "Talk radio & news",                     gf+"tanitweb.com.ico",        tn },
+        { "Ribat FM",             "http://streaming.ribatfm.tn:8000/live",                  "Regional",       "Regional FM from Monastir",             gf+"ribatfm.tn.ico",          tn },
+        { "Nejma FM",             "http://188.166.109.186:8000/stream",                     "Pop / Arabic",   "Arabic pop hits",                       gf+"tanitweb.com.ico",        tn },
+        { "Radio Kalima",         "http://radio.kalima-tunisie.info:8787/Live.m3u",         "News / Talk",    "Independent news and talk radio",       gf+"kalima-tunisie.info.ico", tn },
+        { "Karama FM",            "https://hosting.studioradiomedia.fr:2685/stream",        "Regional",       "FM from Sidi Bouzid",                   gf+"tanitweb.com.ico",        tn },
+        { "Oxygene FM",           "https://streaming.radiooxygene.tn/oxygenefm",            "Pop / Dance",    "Pop and dance from Bizerte",            gf+"radiooxygene.tn.ico",     tn },
+        { "Radio 6",              "http://94.23.230.160:8000/stream.mp3",                   "Youth / Pop",    "Youth music radio from Tunis",          gf+"tanitweb.com.ico",        tn },
+        { "Mouja FM",             "http://87.117.197.33:5258/;",                            "Pop / Arabic",   "Arabic pop and variety",                gf+"tanitweb.com.ico",        tn },
+        { "Mosaique FM Tarab",    "https://radio.mosaiquefm.net/mosatarab",                 "Arabic Tarab",   "Classic Arabic tarab music",            gf+"mosaiquefm.net.ico",      tn },
+        { "Dream FM",             "https://c23.radioboss.fm/stream/109",                    "Pop / Dance",    "Pop, dance and hits",                   gf+"tanitweb.com.ico",        tn },
+        { "Saraha FM",            "http://ns326208.ip-37-59-9.eu:8000/sarahafm",            "Pop / Talk",     "Talk and entertainment",                gf+"tanitweb.com.ico",        tn },
+        { "Mosaique FM DJ",       "https://radio.mosaiquefm.net/mosadj",                    "Electronic / DJ","DJ mixes and electronic music",         gf+"mosaiquefm.net.ico",      tn },
+        { "Radio Orient",         "https://stream.rcs.revma.com/7hnrkawf4p8uv.mp3",         "Arabic",         "Arabic music and culture",              gf+"radioorient.com.ico",     tn },
+        { "Radio Msaken",         "https://stream.rm-fm.net/live",                          "Regional",       "Regional radio from Msaken",            gf+"tanitweb.com.ico",        tn },
+        { "Djerid FM",            "http://137.74.115.47:9998/;listen.mp3",                  "Regional",       "Regional FM from Tozeur-Djerid area",   gf+"tanitweb.com.ico",        tn },
+        { "Banzart FM",           "http://87.117.208.118:16487/source.mp3",                 "Regional",       "FM radio from Bizerte (Banzart)",       gf+"tanitweb.com.ico",        tn },
+        { "Radio Babnet",         "https://radio.babnet.net/?type=http",                    "News / Talk",    "Babnet — news and online radio",        gf+"babnet.net.ico",          tn },
+        { "Twenssa FM",           "http://197.14.12.137:8000/live",                         "Tunisian Dialect","Tunisian music and culture",           gf+"tanitweb.com.ico",        tn },
+        { "Salam FM",             "http://142.4.223.153:9992",                              "Religious",      "Islamic & religious broadcasting",      gf+"tanitweb.com.ico",        tn },
+        { "Horria FM",            "http://horriafm.org:8000/listen.mp3.m3u",                "Pop / Arabic",   "Free radio — music and variety",        gf+"horriafm.org.ico",        tn },
+        { "El Ayam FM",           "http://elayyem-radio.com:8020/live.mp3",                 "Regional",       "Regional FM from Tunisia",              gf+"elayyem-radio.com.ico",   tn },
+        { "Data FM",              "http://91.134.137.140:8000/datafm",                      "Pop / Hits",     "Music and entertainment",               gf+"tanitweb.com.ico",        tn },
+        { "Boukornine Radio",     "https://srv1.backendbroadcast.com:8010/direct",          "Regional",       "Radio from Boukornine area",            gf+"tanitweb.com.ico",        tn },
+        { "Shems Gold",           "http://stream6.tanitweb.com/gold",                       "Arabic Oldies",  "Arabic classic hits",                   gf+"shemsfm.net.ico",         tn },
+        { "One FM",               "http://95.154.254.81:30267/;",                           "Pop / Hits",     "One FM — hits and variety",             gf+"tanitweb.com.ico",        tn },
+        { "Radio Tunisia Med",    "http://azuracast.conceptradio.fr/radio/8000/radio.mp3",  "Mediterranean",  "Mediterranean music and culture",       gf+"tanitweb.com.ico",        tn },
+        { "Radio NEFZAWA",        "http://stream-58.zeno.fm/x26qrvf6by8uv?zs=SSJ17qnWTleWGt0uaPok2Q", "Regional", "Regional radio from Nefzawa",    gf+"zeno.fm.ico",             tn },
+        { "IFM Rire & Chansons",  "https://live.ifm.tn/radio/8010/ifmweb1?1586535034",     "Comedy / Music", "IFM comedy and chanson channel",        gf+"ifm.tn.ico",              tn },
+        { "Mosaique FM Espoir",   "https://webradio2.mosaiquefm.net/ESPOIR",                "Inspirational",  "Inspirational & spiritual music",       gf+"mosaiquefm.net.ico",      tn },
+        { "Jawhara Hit",          "https://streaming2.toutech.net/jfmweb4",                 "Pop / Hits",     "Jawhara Hit web radio",                 gf+"jawharafm.net.ico",       tn },
+        { "Jawhara Gold",         "https://streaming2.toutech.net/jfmweb2",                 "Arabic Oldies",  "Jawhara Gold — classic Arabic hits",    gf+"jawharafm.net.ico",       tn },
+        { "Jawhara Tounsi",       "https://streaming2.toutech.net/jfmweb1",                 "Tunisian Pop",   "Tunisian local hits & pop",             gf+"jawharafm.net.ico",       tn },
+        { "Jawhara Clubbing",     "https://streaming2.toutech.net/jfmweb3",                 "Electronic",     "Club music and DJ mixes",               gf+"jawharafm.net.ico",       tn },
+        { "AlHayet FM",           "https://manager8.streamradio.fr:2885/stream",            "Religious",      "Islamic & cultural programming",        gf+"tanitweb.com.ico",        tn },
 
         // ── Belgium ──────────────────────────────────────────────────────────
         { "Radio 1 (VRT)",        "https://icecast.vrtcdn.be/radio1-high.mp3",              "News / Culture", "Flemish public radio — news & culture", gf+"vrt.be.ico",              be },
@@ -167,6 +223,7 @@ void Database::seedData() {
     sqlite3_finalize(ins);
 
     exec("COMMIT;");
+    exec("PRAGMA user_version = 2;");
 }
 
 // ─── queries ────────────────────────────────────────────────────────────────

@@ -14,7 +14,8 @@ class PlayerController : public QObject {
     Q_PROPERTY(QString genre       READ genre         NOTIFY stationChanged)
     Q_PROPERTY(QString description READ description   NOTIFY stationChanged)
     Q_PROPERTY(float   volume      READ volume  WRITE setVolume NOTIFY volumeChanged)
-    Q_PROPERTY(QString errorString READ errorString   NOTIFY errorOccurred)
+    Q_PROPERTY(QString errorString  READ errorString   NOTIFY errorOccurred)
+    Q_PROPERTY(QString errorStation READ errorStation  NOTIFY streamUnavailable)
 
 public:
     explicit PlayerController(QObject* parent = nullptr);
@@ -26,7 +27,8 @@ public:
     QString genre()       const { return m_genre;       }
     QString description() const { return m_description; }
     float   volume()      const { return m_volume;      }
-    QString errorString() const { return m_errorString; }
+    QString errorString()  const { return m_errorString;  }
+    QString errorStation() const { return m_errorStation; }
 
     Q_INVOKABLE void play(const QString& url,
                           const QString& name,
@@ -41,6 +43,7 @@ signals:
     void stationChanged();
     void volumeChanged();
     void errorOccurred();
+    void streamUnavailable();
 
 private slots:
     void onOutput();
@@ -60,6 +63,7 @@ private:
     QString m_genre;
     QString m_description;
     QString m_errorString;
+    QString m_errorStation;
     float   m_volume{0.80f};
     bool    m_playing{false};
     bool    m_loading{false};

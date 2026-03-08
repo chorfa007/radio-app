@@ -61,6 +61,7 @@ if(Qt6_FOUND)
             qml/RadioGrid.qml
             qml/StationCard.qml
             qml/NowPlayingBar.qml
+            qml/SpectrumAnalyzer.qml
     )
 
     target_include_directories(radio-app-gui PRIVATE src)

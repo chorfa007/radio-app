@@ -30,6 +30,7 @@ void PlayerController::play(const QString& url,
     m_genre        = genre;
     m_description  = description;
     m_errorString.clear();
+    m_errorStation.clear();
     m_loading = true;
     m_playing = false;
     emit stationChanged();
@@ -78,6 +79,7 @@ void PlayerController::stop() {
     m_stationName.clear();
     m_genre.clear();
     m_description.clear();
+    m_errorStation.clear();
     m_playing = false;
     m_loading = false;
     emit stationChanged();
@@ -123,6 +125,12 @@ void PlayerController::onProcessFinished(int /*exitCode*/,
     // call to killProcess() sees nullptr and skips the delete.
     m_process = nullptr;
     proc->deleteLater();
+
+    // Process died while still buffering = stream unreachable
+    if (m_loading) {
+        m_errorStation = m_stationName;
+        emit streamUnavailable();
+    }
 
     m_playing = false;
     m_loading = false;
