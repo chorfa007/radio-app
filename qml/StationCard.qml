@@ -32,9 +32,8 @@ Rectangle {
     scale: isPlaying ? 1.04 : 1.0
     Behavior on scale { NumberAnimation { duration: 220; easing.type: Easing.OutBack } }
 
-    // Background — green-tinted when playing
+    // Background — unchanged when playing
     color: hasError   ? "#1a0d0d"
-         : isPlaying  ? "#0d1f12"
          : cardMouse.containsMouse ? "#22223d" : "#1a1a35"
 
     // Border pulses green while playing
@@ -46,19 +45,6 @@ Rectangle {
     border.width: isPlaying ? (2.0 + _glow * 2.0) : (hasError ? 2 : 1)
 
     Behavior on color { ColorAnimation { duration: 180 } }
-
-    // ── Green gradient wash over the top of the card while playing ────────
-    Rectangle {
-        visible:  isPlaying
-        anchors { top: parent.top; left: parent.left; right: parent.right }
-        height:   70
-        radius:   card.radius
-        opacity:  0.15 + _glow * 0.10
-        gradient: Gradient {
-            GradientStop { position: 0.0; color: "#22c55e" }
-            GradientStop { position: 1.0; color: "transparent" }
-        }
-    }
 
     // ── "NOW PLAYING" badge (top-right) ───────────────────────────────────
     Rectangle {
@@ -190,11 +176,9 @@ Rectangle {
                     Text {
                         Layout.fillWidth: true
                         text:  card.stationName
-                        color: hasError  ? "#fca5a5"
-                             : isPlaying ? "#e9d5ff"   // brighter lavender
-                             : "#e2e8f0"
-                        font.pixelSize: isPlaying ? 15 : 14
-                        font.weight:    isPlaying ? Font.Bold : Font.Medium
+                        color: hasError ? "#fca5a5" : "#e2e8f0"
+                        font.pixelSize: 14
+                        font.weight:    Font.Medium
                         elide: Text.ElideRight
                         Behavior on color         { ColorAnimation  { duration: 180 } }
                         Behavior on font.pixelSize{ NumberAnimation { duration: 150 } }
@@ -206,9 +190,7 @@ Rectangle {
         // ── Genre badge ───────────────────────────────────────────────────
         Rectangle {
             radius: 4
-            color:  hasError  ? "#3d0f0f"
-                  : isPlaying ? "#0f2e18"
-                  : "#1e0f3d"
+            color:  hasError ? "#3d0f0f" : "#1e0f3d"
             height: genreLbl.implicitHeight + 6
             width:  genreLbl.implicitWidth  + 14
 
@@ -216,8 +198,7 @@ Rectangle {
                 id: genreLbl
                 anchors.centerIn: parent
                 text:  card.genre
-                color: hasError  ? "#f87171"
-                     : isPlaying ? "#86efac" : "#a78bfa"
+                color: hasError ? "#f87171" : "#a78bfa"
                 font.pixelSize: 11
             }
         }
@@ -226,7 +207,7 @@ Rectangle {
         Text {
             Layout.fillWidth: true
             text:             card.description
-            color:            isPlaying ? "#bbf7d0" : "#94a3b8"
+            color:            "#94a3b8"
             font.pixelSize:   12
             wrapMode:         Text.WordWrap
             maximumLineCount: 2
@@ -244,7 +225,7 @@ Rectangle {
             color: hasError
                    ? (cardMouse.containsMouse ? "#7f1d1d" : "#450a0a")
                    : isPlaying
-                     ? Qt.rgba(0.08 + _glow * 0.14, 0.55 + _glow * 0.22, 0.24 + _glow * 0.14, 1.0)
+                     ? (cardMouse.containsMouse ? "#6d28d9" : "#5b21b6")
                      : (cardMouse.containsMouse ? "#3b1f7a" : "#2d1b5e")
 
             Behavior on color { ColorAnimation { duration: 150 } }
